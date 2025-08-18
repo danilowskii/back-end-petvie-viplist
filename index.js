@@ -6,7 +6,11 @@ import "dotenv/config";
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://petviebrasil.com",
+  })
+);
 const prisma = new PrismaClient();
 app.get("/", async (req, res) => {
   const getUsers = await prisma.user.findMany();
