@@ -1,0 +1,17 @@
+{
+  "name": "vip-list-petvie",
+  "version": "1.0.0",
+  "description": "viplist to petvie website",
+  "license": "ISC",
+  "author": "danilo-paiva",
+  "type": "module",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
