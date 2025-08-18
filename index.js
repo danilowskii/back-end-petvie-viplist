@@ -3,6 +3,7 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 
+const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -33,6 +34,6 @@ app.post("/api/submit-form", express.json(), async (req, res) => {
   res.json({ message: "Form data received sucessfully.", data: formData });
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log("Server is running on port 3000");
 });
