@@ -5,49 +5,36 @@ import "dotenv/config";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-
-// Parse JSON
 app.use(express.json());
 
-// Lista de origens permitidas
-const allowedOrigins = ["petviebrasil.com", "www.petviebrasil.com"];
-
-// CORS options flexível
 const corsOptions = {
-  origin: (origin, callback) => {
-    // permite requisições sem origin (curl, Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "https://petviebrasil.com",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// Middleware CORS global
+// Aplica CORS para todas as rotas
 app.use(cors(corsOptions));
 
-// Garantir que OPTIONS retorne headers corretos
+// Garantir que todas requisições OPTIONS recebam os headers corretos
 app.options("*", cors(corsOptions));
 
 const prisma = new PrismaClient();
 
-// Rota de teste GET
+// GET de teste
 app.get("/", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (err) {
-    console.error("Erro ao buscar usuários:", err);
-    res
-      .status(500)
-      .json({ message: "Erro ao buscar usuários", error: err.message });
-  }
+  const getUsers = await prisma.user.findMany();
+  const simplifiedData = getUsers.map((user) => ({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    telefone: user.phonenumber,
+  }));
+  console.log("usuarios retornados: ", simplifiedData);
+  res.json(simplifiedData);
 });
 
-// POST endpoint para cadastro
+// POST /api/submit-form
 app.post("/api/submit-form", async (req, res) => {
   try {
     console.log("Novo cadastro recebido:", req.body);
@@ -70,7 +57,6 @@ app.post("/api/submit-form", async (req, res) => {
   }
 });
 
-// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
