@@ -10,10 +10,7 @@ const app = express();
 app.use(express.json());
 
 // Lista de origens permitidas
-const allowedOrigins = [
-  "https://petviebrasil.com",
-  "https://www.petviebrasil.com",
-];
+const allowedOrigins = ["petviebrasil.com", "www.petviebrasil.com"];
 
 // CORS options flexível
 const corsOptions = {
