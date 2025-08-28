@@ -5,36 +5,26 @@ import "dotenv/config";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+
+// Parse JSON
 app.use(express.json());
 
+// CORS options
 const corsOptions = {
   origin: "https://petviebrasil.com",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// Aplica CORS para todas as rotas
+// Middleware CORS global
 app.use(cors(corsOptions));
 
-// Garantir que todas requisições OPTIONS recebam os headers corretos
+// Garantir que OPTIONS retorne headers corretos
 app.options("*", cors(corsOptions));
 
 const prisma = new PrismaClient();
 
-// GET de teste
-app.get("/", async (req, res) => {
-  const getUsers = await prisma.user.findMany();
-  const simplifiedData = getUsers.map((user) => ({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    telefone: user.phonenumber,
-  }));
-  console.log("usuarios retornados: ", simplifiedData);
-  res.json(simplifiedData);
-});
-
-// POST /api/submit-form
+// POST endpoint
 app.post("/api/submit-form", async (req, res) => {
   try {
     console.log("Novo cadastro recebido:", req.body);
