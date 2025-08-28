@@ -9,9 +9,22 @@ const app = express();
 // Parse JSON
 app.use(express.json());
 
-// CORS options
+// Lista de origens permitidas
+const allowedOrigins = [
+  "https://petviebrasil.com",
+  "https://www.petviebrasil.com",
+];
+
+// CORS options flexível
 const corsOptions = {
-  origin: "https://petviebrasil.com",
+  origin: (origin, callback) => {
+    // permite requisições sem origin (ex: curl, Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
