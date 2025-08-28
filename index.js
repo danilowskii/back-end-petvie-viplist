@@ -18,7 +18,7 @@ const allowedOrigins = [
 // CORS options flexível
 const corsOptions = {
   origin: (origin, callback) => {
-    // permite requisições sem origin (ex: curl, Postman)
+    // permite requisições sem origin (curl, Postman)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -37,7 +37,20 @@ app.options("*", cors(corsOptions));
 
 const prisma = new PrismaClient();
 
-// POST endpoint
+// Rota de teste GET
+app.get("/", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.json(users);
+  } catch (err) {
+    console.error("Erro ao buscar usuários:", err);
+    res
+      .status(500)
+      .json({ message: "Erro ao buscar usuários", error: err.message });
+  }
+});
+
+// POST endpoint para cadastro
 app.post("/api/submit-form", async (req, res) => {
   try {
     console.log("Novo cadastro recebido:", req.body);
@@ -60,6 +73,7 @@ app.post("/api/submit-form", async (req, res) => {
   }
 });
 
+// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
